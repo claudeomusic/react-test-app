@@ -7,7 +7,7 @@ class CustomTable extends Component {
   render() {
     return (
       <div style={{ width: this.props.width }}>
-        <h2>HYFN Frontend Challenge</h2>
+        <h2>React Tables</h2>
         <Table
           columns={this.props.columns}
           scroll={{ x: this.props.scroll }}
