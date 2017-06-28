@@ -1,5 +1,11 @@
 body {
-  margin: 0;
-  padding: 0;
+  margin: 50;
+  padding: 50;
   font-family: sans-serif;
 }
+
+tr
+{
+	height:50px !important;
+}
+

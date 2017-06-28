@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import Table from 'rc-table';
+import CustomTable from './CustomTable'
 import registerServiceWorker from './registerServiceWorker';
-import 'rc-table/assets/index.css';
+import './index.css'
 
+// Sample Data
 const ads = {
   "ads": [
     {
@@ -35,7 +35,7 @@ const ads = {
 }
 
 const ads_metrics = {
- "column_names": [
+  "column_names": [
       "impressions",
       "reach",
       "frequency",
@@ -48,7 +48,7 @@ const ads_metrics = {
       "cost_per_action_type:cost_per_goal",
       "actions:offsite_conversion"
     ],
- "rows": [
+  "rows": [
        {
         "remote_id": "456",
         "impressions": "123",
@@ -109,24 +109,33 @@ const ads_metrics = {
 
 }
 
-var columns = ads_metrics["column_names"].map(function(title){
-	return {title: title[0].toUpperCase() + title.substring(1,title.length-1), dataIndex: title.toLowerCase(), key: title.toLowerCase()}
+// joining data between ads/metrics
+var DATA = ads_metrics["rows"].map(function(metric_item)
+{
+  var result = metric_item
+  ads["ads"].forEach(function(ad_item)
+  {
+    if(ad_item["remote_id"] === metric_item["remote_id"])
+    {
+      delete metric_item["remote_id"]
+      result = Object.assign({name: ad_item["name"]}, metric_item,)
+    }
+  });
+  return result;
 });
-columns[0] = Object.assign(columns[0], {width: 100, fixed: 'left'})
 
-var data = ads_metrics["rows"]
+// Formatting data to rc-table requirements
+var COLUMNS = Object.keys(DATA[0]).map(function(title)
+{
+  if(title == "name")
+  {  
+    return {title: title, dataIndex: title, key: title, width: 50, fixed: 'left'}
+  }
+  else
+  {
+    return {title: title, dataIndex: title, key: title}
+  }
+});
 
-
-var mountNode = document.getElementById('root');
-
-ReactDOM.render(  
-	<div style={{ width: 800 }}>
-    <h2>HYFN Frontend Challenge</h2>
-    <Table
-      columns={columns}
-      scroll={{ x: 1200 }}
-      data={data}
-    />
-  </div>,document.getElementById('root'));
-
+ReactDOM.render( <CustomTable scroll={500} columns={COLUMNS} data={DATA} />,document.getElementById('root'));
 registerServiceWorker();
