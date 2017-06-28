@@ -5,7 +5,7 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.css'
 
 // Sample Data
-const ads = {
+const ADS = {
   "ads": [
     {
       "id": 1,
@@ -34,7 +34,7 @@ const ads = {
   ]
 }
 
-const ads_metrics = {
+const ADS_METRICS = {
   "column_names": [
       "impressions",
       "reach",
@@ -106,36 +106,7 @@ const ads_metrics = {
         "actions:offsite_conversion": 901
       }
     ]
-
 }
 
-// joining data between ads/metrics
-var DATA = ads_metrics["rows"].map(function(metric_item)
-{
-  var result = metric_item
-  ads["ads"].forEach(function(ad_item)
-  {
-    if(ad_item["remote_id"] === metric_item["remote_id"])
-    {
-      delete metric_item["remote_id"]
-      result = Object.assign({name: ad_item["name"]}, metric_item,)
-    }
-  });
-  return result;
-});
-
-// Formatting data to rc-table requirements
-var COLUMNS = Object.keys(DATA[0]).map(function(title)
-{
-  if(title == "name")
-  {  
-    return {title: title, dataIndex: title, key: title, width: 50, fixed: 'left'}
-  }
-  else
-  {
-    return {title: title, dataIndex: title, key: title}
-  }
-});
-
-ReactDOM.render( <CustomTable scroll={500} columns={COLUMNS} data={DATA} />,document.getElementById('root'));
+ReactDOM.render( <CustomTable scroll={500} ads={ADS} ads_metrics={ADS_METRICS} />, document.getElementById('root'));
 registerServiceWorker();
